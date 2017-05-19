@@ -1,13 +1,13 @@
 var currentPath = "/";
 var wlansd = new Array();
-var isFileExist = false;
+var doesFileExist = false;
 
 function onLoad(){
     document.addEventListener("deviceready", onDeviceReady, false);
 }
 
 function onDeviceReady(){
-    getFileList('');
+    getFileList("");
     $(document).on("click", "a.dir", function(){
         getFileList(this.text);
     });
@@ -38,7 +38,7 @@ function onDeviceReady(){
 }
 
 function onBackKeyDown(){
-    if(isFileExist == false){
+    if(doesFileExist == false){
         location.href = "index.html";
     } else if(currentPath == "/"){
         location.href = "index.html";
@@ -48,7 +48,7 @@ function onBackKeyDown(){
 }
 // Get the content list.
 function getFileList(dir){
-    isFileExist = false;
+    doesFileExist = false;
     var nextPath = makePath(dir);
     var url = "http://flashair/command.cgi?op=100&DIR=" + nextPath;
 
@@ -64,12 +64,12 @@ function getFileList(dir){
         wlansd.sort(cmptime);
         showFileList(currentPath);
         // Success to get content list.
-        isFileExist = true;
+        doesFileExist = true;
     });
 }
 // Make a Path to show next.
 function makePath(dir){
-    var arrPath = currentPath.split('/');
+    var arrPath = currentPath.split("/");
 
     if(currentPath == "/"){
         arrPath.pop();
@@ -108,11 +108,11 @@ function cmptime(a,b){
     }
 }
 // Show the content list.
-function showFileList(path){
-    $("#list").html('');
+function showFileList(){
+    $("#list").html("");
     $.each(wlansd, function(){
         var file = this;
-        var filelink = $('<a href="javascript:void(0)"></a>');
+        var filelink = $("<a href='javascript:void(0)'></a>");
         var caption = file["fname"];
         var faDir = file["r_uri"];
         var fileobj = $("<div></div>");
@@ -127,7 +127,7 @@ function showFileList(path){
             filelink.addClass("dir");
         } else {
             var array = file["fname"].split(".");
-            var ext = array.length >=2 ? array[array.length-1] : '';
+            var ext = array.length >=2 ? array[array.length-1] : "";
             // Check a file extension.
             if( ext.toUpperCase() == "JPG"){
                 img.attr("src", "http://flashair/thumbnail.cgi?" + faDir + "/" + caption);
@@ -155,7 +155,7 @@ function downloadFile(fname, dir){
     var destUrl = encodeURI("cdvfile://localhost/persistent/download/" + fname);
 
     fileTransfer.download(dlUrl, destUrl, function(entry) {
-        window.open = cordova.InAppBrowser.open(entry.toURL(), '_blank', 'location=no');
+        window.open = cordova.InAppBrowser.open(entry.toURL(), "_blank", "location=no");
     }, function(error) {
         switch (error.code){
             case 1:
@@ -213,7 +213,7 @@ function uploadFile(){
             // Connect HTTP Body suffix.
             faBuffer = connectBuffer(faBuffer, sufReader.result);
             var faReq = new XMLHttpRequest();
-            // POST request upload file to FlashAir.
+            // Make a POST request to upload a file to FlashAir.
             faReq.open("POST", cgi, true);
             // Set HTTP Headers.
             faReq.setRequestHeader("Content-Type", "multipart/form-data; boundary=" + boundary);
@@ -225,7 +225,7 @@ function uploadFile(){
             // Connect HTTP Body prefix and upload file.
             faBuffer = connectBuffer(preReader.result, localBuffer);
             // HTTP Body suffix
-            var suffix = '\r\n' + '--' + boundary + '--';
+            var suffix = "\r\n" + "--" + boundary + "--";
             sufReader.onload = sufReaderSuccess;
             // Load suffix (as ArrayBuffer).
             sufReader.readAsArrayBuffer(new Blob([suffix]));
@@ -234,7 +234,7 @@ function uploadFile(){
         var localReqSuccess = function(){
             localBuffer = localReq.response;
             // HTTP Body prefix
-            var prefix = '--' + boundary + '\r\n' + 'Content-Disposition: form-data; name="userfile"; filename="upload.jpg"\r\n' + 'Content-Type: image/jpeg\r\n\r\n';
+            var prefix = "--" + boundary + "\r\n" + "Content-Disposition: form-data; name=\"userfile\"; filename=\"upload.jpg\"\r\n" + "Content-Type: image/jpeg\r\n\r\n";
             preReader.onload = preReaderSuccess;
             // Load prefix (as ArrayBuffer).
             preReader.readAsArrayBuffer(new Blob([prefix]));
@@ -244,7 +244,7 @@ function uploadFile(){
     });
     return false;
 }
-// Add addBuffer to oriBuffer (as ArrayBuffer).
+// Add "addBuffer" to "oriBuffer" (as ArrayBuffer).
 function connectBuffer(oriBuffer, addBuffer){
     var uint8Array = new Uint8Array(oriBuffer.byteLength + addBuffer.byteLength);
     uint8Array.set(new Uint8Array(oriBuffer), 0);
