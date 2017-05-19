@@ -17,8 +17,8 @@ function getFlashAirInfo(){
     var wlansd = new Array();
 
     $.ajax({
-        type: 'GET',
-        url: 'http://flashair/command.cgi?op=101&DIR=/',
+        type: "GET",
+        url: "http://flashair/command.cgi?op=101&DIR=/",
         success: function(res){
             $("#nof").html(res);
         },
@@ -28,8 +28,8 @@ function getFlashAirInfo(){
     });
 
     $.ajax({
-        type: 'GET',
-        url: 'http://flashair/command.cgi?op=100&DIR=/',
+        type: "GET",
+        url: "http://flashair/command.cgi?op=100&DIR=/",
         success: function(res){
             wlansd = res.split(/\n/g);
             wlansd.shift();
